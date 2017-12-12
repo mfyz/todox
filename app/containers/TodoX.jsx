@@ -48,11 +48,6 @@ const checkboxSupport = (cm) => {
 			const stringPadding = Math.max(currentLine.search(/\S/), 0);
 			const trimmedLine = currentLine.trimLeft();
 
-			const checkbox = {
-				checked: '[x] ',
-				unchecked: '[ ] '
-			};
-
 			const pos = {
 				from: {
 					line: currentLineNumber,
@@ -60,22 +55,20 @@ const checkboxSupport = (cm) => {
 				},
 				to: {
 					line: currentLineNumber,
-					ch: 4 + stringPadding
+					ch: 2 + stringPadding
 				}
 			};
 
 			if (trimmedLine.trim() === '') {
-				// append checkbox to empty line
-				cm.replaceRange(checkbox.unchecked, { line: currentLineNumber, ch: currentLine.length });
-			} else if (trimmedLine.startsWith(checkbox.checked)) {
+				// empty line
+				// do nothing
+			} else if (trimmedLine.startsWith('x ')) {
+				// checked line
 				// make it unchecked
-				cm.replaceRange(checkbox.unchecked, pos.from, pos.to);
-			} else if (trimmedLine.startsWith(checkbox.unchecked)) {
-				// make it checked
-				cm.replaceRange(checkbox.checked, pos.from, pos.to);
+				cm.replaceRange('', pos.from, pos.to);
 			} else {
 				// add a checkbox!
-				cm.replaceRange(checkbox.unchecked, pos.from);
+				cm.replaceRange('x ', pos.from);
 			}
 		}
 	});
