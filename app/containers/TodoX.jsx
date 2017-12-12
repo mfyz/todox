@@ -6,11 +6,9 @@ require('../../node_modules/codemirror/addon/scroll/simplescrollbars.js');
 require('../../node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/codemirror/addon/fold/indent-fold.js');
 require('../../node_modules/codemirror/addon/fold/foldgutter.js');
-
 require('../../node_modules/codemirror/addon/search/search.js');
 require('../../node_modules/codemirror/addon/search/jump-to-line.js');
 require('../../node_modules/codemirror/addon/search/matchesonscrollbar.js');
-
 require('../../node_modules/codemirror/keymap/sublime.js');
 
 const electron = require('electron');
@@ -147,6 +145,14 @@ export default class TodoX extends React.Component {
 				default:
 					break;
 			}
+		});
+
+		ipc.on('loadNewContent', (event) => {
+			// console.log('loadNewContent called!');
+			//console.log(handleContent.read());
+			var updatedContent = handleContent.read();
+			this.setState({ content: updatedContent });
+			cmInstance.setValue(updatedContent);
 		});
 
 		const cmInstance = editor.getCodeMirror();

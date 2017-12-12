@@ -1,5 +1,6 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
+const { dialog } = require('electron');
 const fs = require('fs');
 const JSONStorage = require('node-localstorage').JSONStorage;
 const APPVERSION = require('./package.json').version;
@@ -52,14 +53,31 @@ const storageLocation = getDataLocation();
 global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
-	filename: storageLocation + '/todo.txt',
+	filename: '',
 	write(content) {
 		fs.writeFileSync(this.filename, content, 'utf8');
 	},
 	read() {
 		return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
+	},
+	setFile(filename){
+		this.filename = filename;
 	}
 };
+
+global.setFileLocation = function(win){
+	console.log('====> opening file seletor dialog...');
+	dialog.showOpenDialog(win, {
+		properties: ['openFile'],
+  		filters: [{name: 'Text File', extensions: ['txt']}]
+	}, function(filepaths){
+		//console.log(filepaths);
+		if (!filepaths || filepaths.length === 0) return;
+		handleContent.setFile(filepaths[0]);
+		mainWindow.webContents.send('loadNewContent');
+		global.nodeStorage.setItem('todo_filepath', filepaths[0])
+	});
+}
 
 const installExtensions = () => {
 	if (process.env.NODE_ENV === 'development') {
@@ -84,6 +102,9 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
 	installExtensions();
+
+	let todo_filepath = global.nodeStorage.getItem('todo_filepath') || storageLocation + '/todo.txt';
+	global.handleContent.setFile(todo_filepath);
 
 	let windowState = {};
 	try {
@@ -120,7 +141,7 @@ app.on('ready', () => {
 			mainWindow.maximize();
 		}
 		mainWindow.focus();
-		checkForUpdates();
+		//checkForUpdates();
 	});
 
 	const dispatchShortcutEvent = (ev) => {
@@ -190,6 +211,11 @@ app.on('ready', () => {
 		label: app.getName(),
 		submenu: [
 			{
+				label: 'Open Todo File',
+				accelerator: 'Command+O',
+				click() { setFileLocation() }
+			},
+			{
 				label: 'Website',
 				click() { shell.openExternal('https://github.com/mfyz/todox'); }
 			},
@@ -223,9 +249,17 @@ app.on('ready', () => {
 					label: 'Support',
 					click() { shell.openExternal('https://github.com/mfyz/todox/issues'); }
 				},
+				// {
+				// 	label: 'Check for updates (current: ' + APPVERSION + ')',
+				// 	click() { shell.openExternal('https://github.com/mfyz/todox/releases'); }
+				// },
 				{
-					label: 'Check for updates (current: ' + APPVERSION + ')',
-					click() { shell.openExternal('https://github.com/mfyz/todox/releases'); }
+					type: 'separator'
+				},
+				{
+					label: 'Open Todo File',
+					accelerator: 'Command+O',
+					click() { global.setFileLocation(mainWindow) }
 				},
 				{
 					type: 'separator'
