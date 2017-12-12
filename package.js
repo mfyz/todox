@@ -10,7 +10,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var devDeps = Object.keys(require('./package.json').devDependencies);
 
 
-var appName = argv.name || argv.n || 'FromScratch';
+var appName = argv.name || argv.n || 'TodoX';
 var shouldUseAsar = argv.asar || argv.a || true;
 var shouldBuildAll = argv.all || false;
 

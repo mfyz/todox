@@ -1,11 +1,9 @@
-<img src="https://fromscratch.rocks/assets/img/icon.png?">
-
-FromScratch
+TodoX
 ===========
 
 ## A simple but smart note-taking app
 
-FromScratch is a little app that you can use as a quick note taking or todo app.</p>
+TodoX is a little app that you can use as a quick note taking or todo app.</p>
 
 * Small and simple, the only UI is the text you type
 * Saves on-the-fly, no need to manually save
@@ -37,20 +35,13 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * <kbd>alt</kbd> - show or hide menu (Windows only)
 * <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
-## Download
-Recent downloads for macOS, Windows and Linux available on https://fromscratch.rocks
-
-For Arch users, [FromScratch is available on AUR](https://aur.archlinux.org/packages/fromscratch-bin/)
-
-For macOS, you can also install FromScratch via Homebrew: ```$ brew cask install fromscratch```
-
 ### Installation
 ```sh
 # Download from git
-git clone https://github.com/kilian/fromscratch.git
+git clone https://github.com/mfyz/todox.git
 
 # Install dependencies
-cd fromscratch && npm install
+cd todox && npm install
 
 # build and run
 npm build
@@ -63,22 +54,22 @@ npm run dev
 **Portable Mode**
 `-p, --portable`
 
-Lets you store all the files FromScratch generates in a specified location, such as a USB-stick or
+Lets you store all the files TodoX generates in a specified location, such as a USB-stick or
 other portable storage device. In this mode both the configuration files as well as your text content will be stored in
-a "userdata" directory alongside the FromScratch executable, or when given a directory as an argument, will store
+a "userdata" directory alongside the TodoX executable, or when given a directory as an argument, will store
 the files there.
 
-You can also use this to store the FromScratch configuration files, and the text content, in a synced cloud storage
+You can also use this to store the TodoX configuration files, and the text content, in a synced cloud storage
 folder.
 
 ```
-# run FromScratch in portable mode, saving data in application directory.
-fromscratch --portable
+# run TodoX in portable mode, saving data in application directory.
+todox --portable
 ```
 
 ```
-# run FromScratch in portable mode, saving data in custom directory.
-fromscratch --portable ~/fromscratch_data
+# run TodoX in portable mode, saving data in custom directory.
+todox --portable ~/todox_data
 ```
 **help**
 `-h, --help`
@@ -88,8 +79,8 @@ Prints help information
 ### FAQ
 *Where is my data saved?*
 
-Your data is saved in a plain text file content.txt. On Mac and Linux, this file is saved in ~/.fromscratch. On Windows
-this file is saved in a directory called ".fromscratch" in your userprofile directory.  
+Your data is saved in a plain text file content.txt. On Mac and Linux, this file is saved in ~/.todox. On Windows
+this file is saved in a directory called ".todox" in your userprofile directory.  
 
 *Can my data be saved in an alternate directory?*
 
@@ -97,11 +88,13 @@ Yes! See the **portable mode** section under the **Command Line Arguments** head
 
 ### Credits
 
-FromScratch is built upon these open source projects:
+TodoX is a manual fork export of FromScratch (https://fromscratch.rocks) created by Kilian Valkhof https://github.com/Kilian which is originally licensed under MIT license. TodoX includes many improvements and modifications to support and adapt Todo.txt format and extra capabilities.
+
+TodoX is built upon these open source projects:
 	<a href="http://electron.atom.io">Electron</a>,
 	<a href="https://facebook.github.io/react/">React</a>,
 	<a href="https://github.com/tonsky/FiraCode">Fira Code</a>,
 	<a href="http://codemirror.net/">CodeMirror</a> and
 	<a href="https://github.com/chentsulin/electron-react-boilerplate">Electron-react-boilerplate</a>.
 
-Thanks to @bittersweet for helping me set up IPC to work around a particularly nasty bug, @chentsulin for the electron-react-boilerplate, and @ctrauma for the portable bits.
+Thanks @bittersweet @chentsulin @ctrauma for the initial contributions to FromScratch - indirectly to TodoX to be what it is today.

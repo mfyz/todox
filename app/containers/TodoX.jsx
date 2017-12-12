@@ -83,13 +83,13 @@ const checkboxSupport = (cm) => {
   });
 };
 
-export default class FromScratch extends React.Component {
+export default class TodoX extends React.Component {
   static defaultProps = {
-    content: '|> Welcome to FromScratch.\n\n\n'
+    content: '|> Welcome to TodoX.\n\n\n'
             + 'This app saves everything you type automatically, there\'s no need to save manually.'
             + '\n\nYou can type neat arrows like these: '
             + '->, -->, ->> and =>, courtesy of the font "Fira Code".\n\n'
-            + '\tFromScratch also does automatic indenting\n'
+            + '\tTodoX also does automatic indenting\n'
             + '\tand more. So delete this text & let\'s go!',
   }
 
@@ -208,7 +208,7 @@ export default class FromScratch extends React.Component {
   }
 
   openDownloadPage = () => {
-    shell.openExternal('https://fromscratch.rocks');
+    shell.openExternal('https://github.com/mfyz/todox');
     this.setState({ update: 'updater' });
   }
 
@@ -231,7 +231,7 @@ export default class FromScratch extends React.Component {
       styleActiveLine: true,
       lineNumbers: false,
       lineWrapping: true,
-      theme: 'fromscratch',
+      theme: 'todox',
       autofocus: true,
       scrollbarStyle: 'overlay',
       indentUnit: 4,
