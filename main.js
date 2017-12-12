@@ -52,7 +52,7 @@ const storageLocation = getDataLocation();
 global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
-	filename: storageLocation + '/content.txt',
+	filename: storageLocation + '/todo.txt',
 	write(content) {
 		fs.writeFileSync(this.filename, content, 'utf8');
 	},
@@ -282,6 +282,52 @@ app.on('ready', () => {
 				accelerator: 'CmdOrCtrl+A',
 				selector: 'selectAll:'
 			}]
+		}, {
+			label: 'Task',
+			submenu: [{
+					label: 'Toggle Task Done',
+					accelerator: 'CmdOrCtrl+/',
+					click() { dispatchShortcutEvent('task-check'); }
+				}, {
+					label: 'Move Task Up',
+					accelerator: 'CmdOrCtrl+Up',
+					click() { dispatchShortcutEvent('task-move-up'); }
+				}, {
+					label: 'Move Task Down',
+					accelerator: 'CmdOrCtrl+Down',
+					click() { dispatchShortcutEvent('task-move-down'); }
+				}, {
+					label: 'Toggle Subtasks Collapse',
+					accelerator: 'CmdOrCtrl+]',
+					click() { dispatchShortcutEvent('task-toggle-subtasks'); }
+				}]
+		}, {
+			label: 'View',
+			submenu: [{
+					label: 'Toggle Theme',
+					accelerator: 'CmdOrCtrl+i',
+					click() { dispatchShortcutEvent('toggle-theme'); }
+				}, {
+					type: 'separator'
+				}, {
+					label: 'Increase Font Size',
+					accelerator: 'CmdOrCtrl+Plus',
+					click() { dispatchShortcutEvent('increase-font'); }
+				}, {
+					label: 'Decrease Font Size',
+					accelerator: 'CmdOrCtrl+-',
+					click() { dispatchShortcutEvent('decrease-font'); }
+				}, {
+					label: 'Reset Font Size',
+					accelerator: 'CmdOrCtrl+0',
+					click() { dispatchShortcutEvent('reset-font'); }
+				}, {
+					type: 'separator'
+				}, {
+					label: 'Open Developer Tools',
+					accelerator: 'CmdOrCtrl+Option+J',
+					click() { mainWindow.openDevTools(); }
+				}]
 		}];
 	}
 
@@ -293,6 +339,6 @@ app.on('ready', () => {
 	});
 
 	if (process.env.NODE_ENV === 'development') {
-		mainWindow.openDevTools();
+		//mainWindow.openDevTools();
 	}
 });

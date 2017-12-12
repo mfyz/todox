@@ -43,7 +43,7 @@ if (icon) {
   DEFAULT_OPTS.icon = icon;
 }
 
-var version = argv.version || argv.v || "1.7.8";
+var version = argv.version || argv.v || "1.0.0";
 DEFAULT_OPTS.version = version;
 startPack();
 

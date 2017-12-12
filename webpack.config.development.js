@@ -13,11 +13,11 @@ config.debug = true;
 config.devtool = 'cheap-module-eval-source-map';
 
 config.entry = [
-  'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
+  'webpack-hot-middleware/client?path=http://localhost:5849/__webpack_hmr',
   './app/mainApp'
 ];
 
-config.output.publicPath = 'http://localhost:3000/dist/';
+config.output.publicPath = 'http://localhost:5849/dist/';
 
 config.plugins.push(
   new webpack.HotModuleReplacementPlugin(),
