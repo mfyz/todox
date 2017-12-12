@@ -9,6 +9,7 @@ require('../../node_modules/codemirror/addon/fold/foldgutter.js');
 require('../../node_modules/codemirror/addon/search/search.js');
 require('../../node_modules/codemirror/addon/search/jump-to-line.js');
 require('../../node_modules/codemirror/addon/search/matchesonscrollbar.js');
+require('../../node_modules/codemirror/addon/mode/simple.js');
 require('../../node_modules/codemirror/keymap/sublime.js');
 
 const electron = require('electron');
@@ -37,6 +38,7 @@ const extraKeys = {
 	[CmdOrCtrl + 'G']: 'jumpToLine',
 	[CmdOrCtrl + '/']: (cm) => { checkboxSupport(cm); },
 };
+
 const checkboxSupport = (cm) => {
 	cm.listSelections().forEach((selection) => {
 		const firstLine = Math.min(selection.anchor.line, selection.head.line);
@@ -73,6 +75,19 @@ const checkboxSupport = (cm) => {
 		}
 	});
 };
+
+CodeMirror.defineSimpleMode("todotxtsyntax", {
+	start: [
+		{regex: /^x .*$/, token: "task-completed"},
+		{regex: /^(x )?(\(A\) ).*/, token: [null, "task-priority1"]},
+		{regex: /^(x )?(\(B\) ).*/, token: [null, "task-priority2"]},
+		{regex: /^(x )?(\(C\) ).*/, token: [null, "task-priority3"]},
+		{regex: /^(x )?(\([A-Z]\) ).*/, token: [null, "task-priority"]},
+		{regex: /\@\w+/, token: "task-context"},
+		{regex: /\+\w+/, token: "task-project"},
+		{regex: / [a-z]+\:[a-z0-9\-\/\.]*/, token: "task-keyval"},
+	]
+});
 
 export default class TodoX extends React.Component {
 	static defaultProps = {
@@ -233,7 +248,7 @@ export default class TodoX extends React.Component {
 		const style = {
 			fontSize: `${this.state.fontSize}rem`,
 			...(this.state.lightTheme ?
-					{ filter: 'invert(100%) hue-rotate(20deg) brightness(1.1) grayscale(50%)' }
+					{ filter: 'invert(100%) hue-rotate(10deg) brightness(1.1) grayscale(40%)' }
 					:
 					{}
 			)
@@ -243,6 +258,7 @@ export default class TodoX extends React.Component {
 			lineNumbers: false,
 			lineWrapping: true,
 			theme: 'todox',
+			mode: 'todotxtsyntax',
 			autofocus: true,
 			scrollbarStyle: 'overlay',
 			indentUnit: 4,
