@@ -107,6 +107,12 @@
 	.cm-task-keyval {
 		color: #4294F7;
 	}
+
+	.cm-task-link {
+		color: #daa;
+		border-bottom: 1px dotted #daa;
+		cursor: pointer;
+	}
 }
 
 .CodeMirror-scroll {

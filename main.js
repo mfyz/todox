@@ -58,6 +58,7 @@ global.handleContent = {
 		fs.writeFileSync(this.filename, content, 'utf8');
 	},
 	read() {
+		console.log('=====> reading file: ' + this.filename);
 		return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
 	},
 	setFile(filename){

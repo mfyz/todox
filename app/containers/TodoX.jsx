@@ -78,25 +78,28 @@ const checkboxSupport = (cm) => {
 
 CodeMirror.defineSimpleMode("todotxtsyntax", {
 	start: [
-		{regex: /^(x ).*$/, token: "task-completed"},
+		{regex: /^(x ).*$/, token: "task-completed", sol: true},
 		{regex: /^(x )?(\(A\) ).*/, token: [null, "task-priority1"]},
 		{regex: /^(x )?(\(B\) ).*/, token: [null, "task-priority2"]},
 		{regex: /^(x )?(\(C\) ).*/, token: [null, "task-priority3"]},
 		{regex: /^(x )?(\([A-Z]\) ).*/, token: [null, "task-priority"]},
 		{regex: /(^| )\@\w+/, token: "task-context"},
 		{regex: /(^| )\+\w+/, token: "task-project"},
-		{regex: / [a-z]+\:[a-z0-9\-\/\.]*/, token: "task-keyval"},
+		{regex: / [a-z]+\:[a-z0-9][a-z0-9\-\/\.]*/, token: "task-keyval"},
+		{regex: /(^| )((https?|ftp)\:\/\/[^\s\/$.?#].[^\s]*)/, token: [null, "task-link"]},
 	]
 });
 
 export default class TodoX extends React.Component {
 	static defaultProps = {
-		content: '|> Welcome to TodoX.\n\n\n'
-						+ 'This app saves everything you type automatically, there\'s no need to save manually.'
-						+ '\n\nYou can type neat arrows like these: '
-						+ '->, -->, ->> and =>, courtesy of the font "Fira Code".\n\n'
-						+ '\tTodoX also does automatic indenting\n'
-						+ '\tand more. So delete this text & let\'s go!',
+		content: 'Welcome to TodoX.\n'
+			+ 'This app saves everything you type automatically, there\'s no need to save manually.\n'
+			+ 'Each line is a todo item.\n'
+			+ 'x You can mark tasks done\n'
+			+ 'Categorize with @contexts or +tags\n'
+			+ '(A) Prioritize\n'
+			+ '\tAdd sub tasks.\n'
+			+ 'Read about Todo.txt format to learn more...'
 	}
 
 	constructor(props) {
@@ -172,6 +175,13 @@ export default class TodoX extends React.Component {
 
 		cmInstance.on('unfold', () => {
 			this.updateFolds();
+		});
+
+		cmInstance.on("mousedown", (cm, e) => { 
+			if (e.target && e.target.className.indexOf('cm-task-link') !== -1) {
+				//console.log("link clicked: " + e.target.innerHTML);
+				shell.openExternal(e.target.innerHTML);
+			}
 		});
 	}
 
