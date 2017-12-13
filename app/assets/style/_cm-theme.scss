@@ -9,9 +9,12 @@
 		color: lighten($textColor, 15%);
 	}
 
+	.CodeMirror-sizer {
+		margin-left: 0 !important;
+	}
+
 	.CodeMirror-line {
-		padding-left: 5vw;
-		padding-right: 5vw;
+		padding: 1rem 5vw;
 	}
 
 	.CodeMirror-cursor {
@@ -19,7 +22,7 @@
 	}
 
 	.CodeMirror-activeline-background {
-		background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 4%, lighten($bgColor, 1%) 60%, $bgColor 100%);
+		background: lighten($bgColor, 3%);
 	}
 
 	.CodeMirror-gutters {
@@ -30,7 +33,8 @@
 
 	.CodeMirror-guttermarker-subtle,
 	.CodeMirror-foldmarker {
-		color: lighten($bgColor, 8%);
+		margin-top: 1rem;
+		color: lighten($bgColor, 15%);
 		cursor: pointer;
 	}
 
@@ -48,13 +52,7 @@
 	}
 
 	.CodeMirror-guttermarker-subtle {
-		opacity: 0;
 		transition: 0.3s ease opacity;
-
-		&:hover,
-		&.CodeMirror-foldgutter-folded {
-			opacity: 1;
-		}
 	}
 
 	.CodeMirror-foldgutter-open::after {

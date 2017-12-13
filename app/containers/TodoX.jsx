@@ -78,13 +78,13 @@ const checkboxSupport = (cm) => {
 
 CodeMirror.defineSimpleMode("todotxtsyntax", {
 	start: [
-		{regex: /^x .*$/, token: "task-completed"},
+		{regex: /^(x ).*$/, token: "task-completed"},
 		{regex: /^(x )?(\(A\) ).*/, token: [null, "task-priority1"]},
 		{regex: /^(x )?(\(B\) ).*/, token: [null, "task-priority2"]},
 		{regex: /^(x )?(\(C\) ).*/, token: [null, "task-priority3"]},
 		{regex: /^(x )?(\([A-Z]\) ).*/, token: [null, "task-priority"]},
-		{regex: /\@\w+/, token: "task-context"},
-		{regex: /\+\w+/, token: "task-project"},
+		{regex: /(^| )\@\w+/, token: "task-context"},
+		{regex: /(^| )\+\w+/, token: "task-project"},
 		{regex: / [a-z]+\:[a-z0-9\-\/\.]*/, token: "task-keyval"},
 	]
 });
@@ -247,6 +247,7 @@ export default class TodoX extends React.Component {
 	render() {
 		const style = {
 			fontSize: `${this.state.fontSize}rem`,
+			lineHeight: `${this.state.fontSize * 1.5}rem`,
 			...(this.state.lightTheme ?
 					{ filter: 'invert(100%) hue-rotate(10deg) brightness(1.1) grayscale(40%)' }
 					:
