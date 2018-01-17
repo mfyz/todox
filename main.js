@@ -1,11 +1,10 @@
-/* eslint no-path-concat: 0, func-names:0 */
+const path = require('path');
 const electron = require('electron');
 const { dialog } = require('electron');
 const fs = require('fs');
 const JSONStorage = require('node-localstorage').JSONStorage;
-const APPVERSION = require('./package.json').version;
-const https = require('https');
-const compareVersions = require('compare-versions');
+// const APPVERSION = require('./package.json').version;
+// const compareVersions = require('compare-versions');
 const minimist = require('minimist');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
@@ -61,37 +60,38 @@ global.handleContent = {
 		console.log('=====> reading file: ' + this.filename);
 		return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
 	},
-	setFile(filename){
+	setFile(filename) {
 		this.filename = filename;
 	}
 };
 
-global.setFileLocation = function(win){
+global.setFileLocation = (win) => {
 	console.log('====> opening file seletor dialog...');
 	dialog.showOpenDialog(win, {
 		properties: ['openFile'],
-  		filters: [{name: 'Text File', extensions: ['txt']}]
-	}, function(filepaths){
-		//console.log(filepaths);
+		filters: [{ name: 'Text File', extensions: ['txt'] }]
+	}, (filepaths) => {
+		// console.log(filepaths);
 		if (!filepaths || filepaths.length === 0) return;
-		handleContent.setFile(filepaths[0]);
+		global.handleContent.setFile(filepaths[0]);
 		mainWindow.webContents.send('loadNewContent');
-		global.nodeStorage.setItem('todo_filepath', filepaths[0])
+		global.nodeStorage.setItem('todo_filepath', filepaths[0]);
 	});
-}
+};
 
 const installExtensions = () => {
 	if (process.env.NODE_ENV === 'development') {
-		const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
+		const installer = require('electron-devtools-installer'); // eslint-disable-line
 		const extensions = [
 			'REACT_DEVELOPER_TOOLS'
 		];
 		const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-		for (const name of extensions) {
+		extensions.map((ext) => {
 			try {
-				installer.default(installer[name], forceDownload);
+				installer.default(installer[ext], forceDownload);
 			} catch (e) {} // eslint-disable-line
-		}
+			return ext;
+		});
 	}
 };
 
@@ -104,8 +104,8 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
 	installExtensions();
 
-	let todo_filepath = global.nodeStorage.getItem('todo_filepath') || storageLocation + '/todo.txt';
-	global.handleContent.setFile(todo_filepath);
+	const todoFilePath = global.nodeStorage.getItem('todo_filepath') || storageLocation + '/todo.txt';
+	global.handleContent.setFile(todoFilePath);
 
 	let windowState = {};
 	try {
@@ -121,7 +121,7 @@ app.on('ready', () => {
 	const windowSettings = {
 		show: false,
 		title: app.getName(),
-		icon: __dirname + '/app/assets/img/icon.png',
+		icon: path.join(__dirname, '/app/assets/img/icon.png'),
 		x: (windowState.bounds && windowState.bounds.x) || undefined,
 		y: (windowState.bounds && windowState.bounds.y) || undefined,
 		width: (windowState.bounds && windowState.bounds.width) || 550,
@@ -133,7 +133,7 @@ app.on('ready', () => {
 	};
 
 	mainWindow = new BrowserWindow(windowSettings);
-	mainWindow.loadURL('file://' + __dirname + '/app/app.html');
+	mainWindow.loadURL(path.join('file://', __dirname, '/app/app.html'));
 
 	mainWindow.on('ready-to-show', () => {
 		mainWindow.show();
@@ -142,7 +142,6 @@ app.on('ready', () => {
 			mainWindow.maximize();
 		}
 		mainWindow.focus();
-		//checkForUpdates();
 	});
 
 	const dispatchShortcutEvent = (ev) => {
@@ -156,9 +155,13 @@ app.on('ready', () => {
 		gsc.register('CmdOrCtrl+Plus', () => { dispatchShortcutEvent('increase-font'); });
 		gsc.register('CmdOrCtrl+i', () => { dispatchShortcutEvent('toggle-theme'); });
 		gsc.register('CmdOrCtrl+s', () => { dispatchShortcutEvent('save'); });
+		gsc.register('CmdOrCtrl+t', () => { dispatchShortcutEvent('toggle-toolbar'); });
+		gsc.register('CmdOrCtrl+f', () => { dispatchShortcutEvent('focus-search'); });
+		gsc.register('Alt+Up', () => { dispatchShortcutEvent('increase-priority'); });
+		gsc.register('Alt+Down', () => { dispatchShortcutEvent('decrease-priority'); });
+		gsc.register('CmdOrCtrl+r', () => { mainWindow.webContents.reload(); });
 		gsc.register('CmdOrCtrl+w', () => { app.quit(); });
-		gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
-		gsc.register('CmdOrCtrl+r ', () => { });
+		gsc.register('CmdOrCtrl+q', () => { app.quit(); });
 		gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
 	};
 
@@ -187,34 +190,13 @@ app.on('ready', () => {
 		});
 	});
 
-	const checkForUpdates = () => {
-		/*
-		https.get('https://-----/latest.json?current=' + APPVERSION, (res) => {
-			let json = '';
-			res.on('data', (d) => {
-				json += d;
-			});
-
-			res.on('end', () => {
-				const latestVersion = JSON.parse(json).version;
-				if (compareVersions(latestVersion, APPVERSION) === 1) {
-					global.latestVersion = latestVersion;
-					dispatchShortcutEvent('show-update-msg');
-				}
-			});
-		}).on('error', (e) => {
-			console.error(e);
-		});
-		*/
-	};
-
 	let template = [{
 		label: app.getName(),
 		submenu: [
 			{
 				label: 'Open Todo File',
 				accelerator: 'Command+O',
-				click() { setFileLocation() }
+				click() { global.setFileLocation(); }
 			},
 			{
 				label: 'Website',
@@ -260,7 +242,7 @@ app.on('ready', () => {
 				{
 					label: 'Open Todo File',
 					accelerator: 'Command+O',
-					click() { global.setFileLocation(mainWindow) }
+					click() { global.setFileLocation(mainWindow); }
 				},
 				{
 					type: 'separator'
@@ -290,55 +272,75 @@ app.on('ready', () => {
 			]
 		}, {
 			label: 'Edit',
-			submenu: [{
-				label: 'Undo',
-				accelerator: 'CmdOrCtrl+Z',
-				selector: 'undo:'
-			}, {
-				label: 'Redo',
-				accelerator: 'Shift+CmdOrCtrl+Z',
-				selector: 'redo:'
-			}, {
-				type: 'separator'
-			}, {
-				label: 'Cut',
-				accelerator: 'CmdOrCtrl+X',
-				selector: 'cut:'
-			}, {
-				label: 'Copy',
-				accelerator: 'CmdOrCtrl+C',
-				selector: 'copy:'
-			}, {
-				label: 'Paste',
-				accelerator: 'CmdOrCtrl+V',
-				selector: 'paste:'
-			}, {
-				label: 'Select All',
-				accelerator: 'CmdOrCtrl+A',
-				selector: 'selectAll:'
-			}]
+			submenu: [
+				{
+					label: 'Undo',
+					accelerator: 'CmdOrCtrl+Z',
+					selector: 'undo:'
+				}, {
+					label: 'Redo',
+					accelerator: 'Shift+CmdOrCtrl+Z',
+					selector: 'redo:'
+				}, {
+					type: 'separator'
+				}, {
+					label: 'Cut',
+					accelerator: 'CmdOrCtrl+X',
+					selector: 'cut:'
+				}, {
+					label: 'Copy',
+					accelerator: 'CmdOrCtrl+C',
+					selector: 'copy:'
+				}, {
+					label: 'Paste',
+					accelerator: 'CmdOrCtrl+V',
+					selector: 'paste:'
+				}, {
+					label: 'Select All',
+					accelerator: 'CmdOrCtrl+A',
+					selector: 'selectAll:'
+				}
+			]
 		}, {
 			label: 'Task',
 			submenu: [{
-					label: 'Toggle Task Done',
-					accelerator: 'CmdOrCtrl+/',
-					click() { dispatchShortcutEvent('task-check'); }
-				}, {
-					label: 'Move Task Up',
-					accelerator: 'CmdOrCtrl+Up',
-					click() { dispatchShortcutEvent('task-move-up'); }
-				}, {
-					label: 'Move Task Down',
-					accelerator: 'CmdOrCtrl+Down',
-					click() { dispatchShortcutEvent('task-move-down'); }
-				}, {
-					label: 'Toggle Subtasks Collapse',
-					accelerator: 'CmdOrCtrl+]',
-					click() { dispatchShortcutEvent('task-toggle-subtasks'); }
-				}]
+				label: 'Toggle Task Done',
+				accelerator: 'CmdOrCtrl+/',
+				click() { dispatchShortcutEvent('task-check'); }
+			}, {
+				label: 'Move Task Up',
+				accelerator: 'CmdOrCtrl+Up',
+				click() { dispatchShortcutEvent('task-move-up'); }
+			}, {
+				label: 'Move Task Down',
+				accelerator: 'CmdOrCtrl+Down',
+				click() { dispatchShortcutEvent('task-move-down'); }
+			}, {
+				label: 'Toggle Subtasks Collapse',
+				accelerator: 'CmdOrCtrl+]',
+				click() { dispatchShortcutEvent('task-toggle-subtasks'); }
+			}]
+		}, {
+			label: 'Priority',
+			submenu: [{
+				label: 'Increase Priority',
+				// accelerator: 'Alt+Up',
+				click() { dispatchShortcutEvent('increase-priority'); }
+			}, {
+				label: 'Decrease Priority',
+				// accelerator: 'Alt+Down',
+				click() { dispatchShortcutEvent('decrease-priority'); }
+			}]
 		}, {
 			label: 'View',
-			submenu: [{
+			submenu: [
+				{
+					label: 'Toggle Filter Bar',
+					accelerator: 'CmdOrCtrl+T',
+					click() { dispatchShortcutEvent('toggle-toolbar'); }
+				}, {
+					type: 'separator'
+				}, {
 					label: 'Toggle Theme',
 					accelerator: 'CmdOrCtrl+i',
 					click() { dispatchShortcutEvent('toggle-theme'); }
@@ -358,11 +360,14 @@ app.on('ready', () => {
 					click() { dispatchShortcutEvent('reset-font'); }
 				}, {
 					type: 'separator'
-				}, {
+				},
+				// {role: 'reload'},
+				{
 					label: 'Open Developer Tools',
 					accelerator: 'CmdOrCtrl+Option+J',
 					click() { mainWindow.openDevTools(); }
-				}]
+				}
+			]
 		}];
 	}
 

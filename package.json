@@ -2,7 +2,7 @@
 	"name": "TodoX",
 	"version": "1.0.0",
 	"description": "Clean and simple todo app built for Todo.txt format",
-	"main": "main.js",
+	"main": "./main.js",
 	"scripts": {
 		"hot-server": "node server.js",
 		"build": "NODE_ENV=production webpack --config webpack.config.production.js --progress --profile --colors",
@@ -10,6 +10,7 @@
 		"start-hot": "HOT=1 NODE_ENV=development electron .",
 		"package": "NODE_ENV=production node package.js",
 		"package-all": "npm run package -- --all",
+		"package-manual": "node ./node_modules/electron-packager/cli.js ./ --appname=TodoX --app-version=1.0.0 --asar --icon=build/icon.icns --ignore=node_modules --overwrite --out=release",
 		"dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\""
 	},
 	"bin": {
@@ -57,7 +58,6 @@
 		"css-loader": "^0.26.1",
 		"del": "^3.0.0",
 		"devtron": "^1.3.0",
-		"electron": "^1.7.8",
 		"electron-devtools-installer": "^2.2.0",
 		"electron-packager": "^9.1.0",
 		"eslint": "^4.8.0",
@@ -82,13 +82,16 @@
 		"webpack-target-electron-renderer": "^0.4.0"
 	},
 	"dependencies": {
+		"codemirror-revisedsearch": "^1.0.12",
 		"compare-versions": "^3.1.0",
+		"electron": "^1.7.10",
 		"electron-debug": "^1.1.0",
 		"minimist": "^1.2.0",
 		"node-localstorage": "^1.3.0",
 		"object-assign": "^4.1.1",
-		"react": "^16.0.0",
+		"prop-types": "^15.6.0",
+		"react": "^16.2.0",
 		"react-codemirror": "^1.0.0",
-		"react-dom": "^16.0.0"
+		"react-dom": "^16.2.0"
 	}
 }

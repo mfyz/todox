@@ -23,7 +23,10 @@ var DEFAULT_OPTS = {
 		ProductName: appName
 	},
 	asar: shouldUseAsar,
+	packageManager: false,
+	prune: false,
 	ignore: [
+		'/.vscode',
 		'/README.md',
 		'/server.js',
 		'/webpack.*',
@@ -50,6 +53,7 @@ startPack();
 
 function startPack() {
 	console.log('start pack...');
+	//pack(os.platform(), os.arch(), log(os.platform(), os.arch()));return;
 	webpack(cfg, function runWebpackBuild(err, stats) {
 		if (err) return console.error(err);
 		del('release')

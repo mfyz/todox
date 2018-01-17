@@ -5,18 +5,18 @@
     <title>TodoX</title>
   </head>
   <body>
-    <div id="react-root"></div>
-    <script>
-      (function() {
-        if (process.env.NODE_ENV === 'development') {
-          const devtoolsInstaller = require('electron-devtools-installer');
-          devtoolsInstaller.default(devtoolsInstaller.REACT_DEVELOPER_TOOLS).catch(() => {});
-        }
+	<div id="react-root"></div>
+	<script type="text/javascript">
+		(function() {
+			if (process.env.NODE_ENV === 'development') {
+				const devtoolsInstaller = require('electron-devtools-installer');
+				devtoolsInstaller.default(devtoolsInstaller.REACT_DEVELOPER_TOOLS).catch(() => {});
+			}
 
-        const script = document.createElement('script');
-        script.src = (process.env.HOT) ? 'http://localhost:5849/dist/bundle.js' : '../dist/bundle.js';
-        document.write(script.outerHTML);
-      }());
+			const script = document.createElement('script');
+			script.src = (process.env.HOT) ? 'http://localhost:5849/dist/bundle.js' : '../dist/bundle.js';
+			document.write(script.outerHTML);
+		}());
     </script>
   </body>
 </html>

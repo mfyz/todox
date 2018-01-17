@@ -113,6 +113,180 @@
 		border-bottom: 1px dotted #daa;
 		cursor: pointer;
 	}
+
+	.cm-task-divider {
+		display: block;
+		border-bottom: 1px solid $textColor;
+		color: transparent;
+		margin: -1.5rem 0 0.5rem 0;
+		opacity: 0.2;
+	}
+
+	.cm-task-heading {
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+
+	.cm-filterMatch {
+		background: lighten($bgColor, 5%);
+	}
+
+	.cm-searchResult {
+		background-color: yellow;
+	}
+}
+
+.applicationWrapper.filterActive {
+	.CodeMirror-line {
+		font-size: 0.5em;
+		padding: 0 5vw;
+		opacity: 0.2;
+	}
+
+	.cm-task-heading {
+		font-size: 1em;
+	}
+
+	.cm-task-divider {
+		margin: -3.5rem 0 -1.5rem 0;
+		opacity: 0.8;
+	}
+
+	.CodeMirror-guttermarker-subtle {
+		margin-top: 0;
+    	transform: scale(0.5);
+	}
+
+	.filterResult {
+		.CodeMirror-line {
+			font-size: 1em;
+			opacity: 1;
+			padding: 1rem 5vw;
+		}
+
+		.CodeMirror-guttermarker-subtle {
+			margin-top: 1rem;
+			transform: scale(1);
+		}
+	}
+}
+
+$toolbarHeight: 3.5rem;
+$toolbarBgColor: lighten($bgColor, 2%);
+$scrollGradientHeaderHeight: 3rem;
+
+.applicationWrapper .toolbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	height: 0;
+	overflow: hidden;
+	transition: all ease-in-out 200ms;
+	line-height: $toolbarHeight;
+	background-color: $toolbarBgColor;
+
+	.filterList {
+		text-align: center;
+		padding-right: 10rem;
+
+		ul, li {
+			display: inline-block;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		a {
+			display: inline-block;
+			height: $toolbarHeight - 1.5rem;
+			line-height: $toolbarHeight - 1.5rem;
+			padding: 0 1rem;
+			background-color: darken($toolbarBgColor, 3%);
+			border-radius: 0.5rem;
+			border: 1px solid transparent;
+			color: $textColor;
+			margin: 0 0.3rem;
+			font-size: 0.6em;
+			text-decoration: none;
+			transition: all ease-in-out 200ms;
+
+			&.active {
+				background-color: lighten($toolbarBgColor, 5%);
+				border-color: lighten($toolbarBgColor, 15%);
+				color: lighten($textColor, 15%);
+			}
+		}
+	}
+
+	.searchWrapper {
+		position: absolute;
+		top: 0;
+		right: 0;
+
+		input {
+			height: $toolbarHeight;
+			line-height: $toolbarHeight;
+			font-size: 0.8em;
+			font-family: inherit;
+			padding: 0 1.5rem;
+			width: 15rem;
+			color: $textColor;
+			background-color: $toolbarBgColor;
+			border: 0;
+			border-left: 2px solid darken($toolbarBgColor, 3%);
+			outline: none;
+
+			&::placeholder {
+				color: darken($textColor, 20%);
+			}
+		}
+	}
+}
+
+.scrollGradientHeader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 11;
+	height: $scrollGradientHeaderHeight;
+	background-color: transparent; 
+	background: linear-gradient(to top, rgba(0, 43, 54, 0),$bgColor 100%);
+}
+
+.ReactCodeMirror {
+	transition: all ease-in-out 200ms;
+
+	.CodeMirror {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	.CodeMirror-scroll {
+		transition: all ease-in-out 200ms;
+		padding-top: 3rem;
+	}
+
+	.CodeMirror::before, .CodeMirror::after {
+		display: none;
+	}
+}
+
+.applicationWrapper.hasToolbar {
+	.toolbar {
+		display: block;
+		height: $toolbarHeight;
+	}
+
+	.ReactCodeMirror {
+		top: $toolbarHeight;
+	}
+
+	.CodeMirror-scroll {
+		padding-top: 1.5rem;
+	}
 }
 
 .CodeMirror-scroll {
