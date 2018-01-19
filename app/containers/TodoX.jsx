@@ -249,6 +249,9 @@ export default class TodoX extends React.Component {
 			case 'task-toggle-subtasks':
 				cmInstance.foldCode(cmInstance.getCursor());
 				break;
+			case 'task-move-completed':
+				this.moveCompletedTasks();
+				break;
 			case 'toggle-toolbar':
 				this.toggleToolbar();
 				break;
@@ -318,6 +321,49 @@ export default class TodoX extends React.Component {
 				cmInstance.addOverlay(this.searchOverlay);
 			}
 		}, 200);
+	}
+
+	moveCompletedTasks() {
+		const cm = this.editor.getCodeMirror();
+		const lineCount = cm.lineCount();
+
+		// determine the beginning of the completed tasks block
+		let completedTasksStartLine = 0;
+		let searchingTasksStartLine = true;
+		for (let i = lineCount; i > 0; i -= 1) {
+			const line = cm.getLine(i - 1);
+			if (searchingTasksStartLine) {
+				if (line.search(/^x .*/) === -1) {
+					searchingTasksStartLine = false;
+				}
+				else {
+					completedTasksStartLine = i - 1;
+				}
+			}
+		}
+
+		// find completed tasks above the completed tasks block
+		// and copy to completed tasks block at the top
+		const linesToDelete = [];
+		cm.eachLine(0, completedTasksStartLine - 1, (line) => {
+			// console.log('--> line: ', line); return;
+			if (line.text.search(/^x .*/) === 0) {
+				cm.replaceRange(line.text + '\n',
+					{ line: completedTasksStartLine, ch: 0 },
+					{ line: completedTasksStartLine, ch: 0 });
+				linesToDelete.push(cm.getLineNumber(line));
+				completedTasksStartLine += 1;
+			}
+		});
+		linesToDelete.sort((a, b) => a - b).reverse();
+
+		// clean up original task lines
+		linesToDelete.map((lineNumber) => {
+			cm.replaceRange('',
+				{ line: lineNumber, ch: 0 },
+				{ line: lineNumber + 1, ch: 0 });
+			return lineNumber;
+		});
 	}
 
 	toggleFilter(query) {

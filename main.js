@@ -35,14 +35,14 @@ Optional arguments:
 
 // get data location
 const getDataLocation = () => {
-	let location = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
+	const location = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
 		+ '/.todox'
 		+ (process.env.NODE_ENV === 'development' ? '/dev' : '');
 
-	if (typeof argv.portable !== 'undefined') {
-		location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
-		app.setPath('userData', location);
-	}
+	// if (typeof argv.portable !== 'undefined') {
+	// 	location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
+	// 	app.setPath('userData', location);
+	// }
 
 	return location;
 };
@@ -57,7 +57,7 @@ global.handleContent = {
 		fs.writeFileSync(this.filename, content, 'utf8');
 	},
 	read() {
-		console.log('=====> reading file: ' + this.filename);
+		// console.log('=====> reading file: ' + this.filename);
 		return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
 	},
 	setFile(filename) {
@@ -66,7 +66,7 @@ global.handleContent = {
 };
 
 global.setFileLocation = (win) => {
-	console.log('====> opening file seletor dialog...');
+	// console.log('====> opening file selector dialog...');
 	dialog.showOpenDialog(win, {
 		properties: ['openFile'],
 		filters: [{ name: 'Text File', extensions: ['txt'] }]
@@ -319,6 +319,10 @@ app.on('ready', () => {
 				label: 'Toggle Subtasks Collapse',
 				accelerator: 'CmdOrCtrl+]',
 				click() { dispatchShortcutEvent('task-toggle-subtasks'); }
+			}, {
+				label: 'Move Completed Tasks Down',
+				accelerator: 'CmdOrCtrl+\\',
+				click() { dispatchShortcutEvent('task-move-completed'); }
 			}]
 		}, {
 			label: 'Priority',
