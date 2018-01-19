@@ -11,6 +11,7 @@ const fileWatcher = require('chokidar');
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
 
 let fileWatcherEnabled = true;
+let fileWatcherDisabledTimeout = null;
 
 if (process.env.NODE_ENV === 'development') {
 	require('electron-debug')(); // eslint-disable-line global-require
@@ -124,9 +125,10 @@ app.on('ready', () => {
 	}
 
 	ipc.on('writeContent', (event, arg) => {
+		clearTimeout(fileWatcherDisabledTimeout);
 		fileWatcherEnabled = false;
 		global.handleContent.write(arg);
-		setTimeout(() => { fileWatcherEnabled = true; }, 1000);
+		fileWatcherDisabledTimeout = setTimeout(() => { fileWatcherEnabled = true; }, 1000);
 	});
 
 	const windowSettings = {

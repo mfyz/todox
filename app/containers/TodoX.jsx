@@ -305,7 +305,6 @@ export default class TodoX extends React.Component {
 	}
 
 	componentDidUpdate() {
-		ipc.send('writeContent', this.state.content);
 		this.updateFolds();
 	}
 
@@ -472,6 +471,7 @@ export default class TodoX extends React.Component {
 
 	handleChange = (newcontent) => {
 		this.setState({ content: newcontent });
+		ipc.send('writeContent', newcontent);
 	}
 
 	openDownloadPage = () => {
