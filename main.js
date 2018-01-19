@@ -6,8 +6,11 @@ const JSONStorage = require('node-localstorage').JSONStorage;
 // const APPVERSION = require('./package.json').version;
 // const compareVersions = require('compare-versions');
 const minimist = require('minimist');
+const fileWatcher = require('chokidar');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
+
+let fileWatcherEnabled = true;
 
 if (process.env.NODE_ENV === 'development') {
 	require('electron-debug')(); // eslint-disable-line global-require
@@ -57,7 +60,7 @@ global.handleContent = {
 		fs.writeFileSync(this.filename, content, 'utf8');
 	},
 	read() {
-		// console.log('=====> reading file: ' + this.filename);
+		console.log('=====> reading file: ' + this.filename);
 		return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
 	},
 	setFile(filename) {
@@ -107,15 +110,23 @@ app.on('ready', () => {
 	const todoFilePath = global.nodeStorage.getItem('todo_filepath') || storageLocation + '/todo.txt';
 	global.handleContent.setFile(todoFilePath);
 
+	const watcher = fileWatcher.watch(todoFilePath, { persistent: true });
+	watcher.on('change', () => {
+		if (fileWatcherEnabled) mainWindow.webContents.send('loadNewContent');
+	});
+
 	let windowState = {};
 	try {
 		windowState = global.nodeStorage.getItem('windowstate') || {};
-	} catch (err) {
+	}
+	catch (err) {
 		console.log('empty window state file, creating new one.');
 	}
 
 	ipc.on('writeContent', (event, arg) => {
+		fileWatcherEnabled = false;
 		global.handleContent.write(arg);
+		setTimeout(() => { fileWatcherEnabled = true; }, 1000);
 	});
 
 	const windowSettings = {
