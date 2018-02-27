@@ -155,6 +155,7 @@ app.on('ready', () => {
 			mainWindow.maximize();
 		}
 		mainWindow.focus();
+		mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
 	});
 
 	const dispatchShortcutEvent = (ev) => {

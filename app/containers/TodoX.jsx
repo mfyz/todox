@@ -182,6 +182,13 @@ export default class TodoX extends React.Component {
 		};
 	}
 
+	static vw2px(v) {
+		const x = window.innerWidth
+			|| document.documentElement.clientWidth
+			|| document.getElementsByTagName('body')[0].clientWidth;
+		return (x * v) / 100;
+	}
+
 	constructor(props) {
 		super();
 
@@ -302,6 +309,15 @@ export default class TodoX extends React.Component {
 				this.highlightFilteredLines(this.state.filterQuery);
 			}
 		});
+
+		cmInstance.on('renderLine', (cm, line, elt) => {
+			const off = CodeMirror.countColumn(line.text, null, cmInstance.getOption('tabSize'));
+			elt.style.textIndent = '-' + off + 'vw';
+			elt.style.paddingLeft = (5 + off) + 'vw';
+			// console.log(elt.style.textIndent);
+			// console.log(elt.style.paddingLeft);
+		});
+		cmInstance.refresh();
 	}
 
 	componentDidUpdate() {
@@ -407,7 +423,7 @@ export default class TodoX extends React.Component {
 	}
 
 	saveFilter() {
-		console.log('add filter?');
+		// console.log('add filter?');
 		if (this.state.searchQuery.length > 0) {
 			const updatedSavedFilters = this.state.savedFilters;
 			updatedSavedFilters.push(this.state.searchQuery);
@@ -554,7 +570,7 @@ export default class TodoX extends React.Component {
 						</ul>
 					</div>
 					<div className="searchWrapper">
-						<input 
+						<input
 							type="text"
 							ref={(c) => { this.searchBox = c; }}
 							placeholder="Search"
