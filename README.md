@@ -1,4 +1,5 @@
 TodoX
+[![Build Status](https://travis-ci.com/mfyz/todox.svg?branch=master)](https://travis-ci.com/mfyz/todox)
 ===========
 
 ## A simple but smart note-taking app
@@ -50,6 +51,13 @@ electron main.js
 # or run dev version
 npm run dev
 ```
+
+### Package Appliction
+
+```sh
+npm run package
+```
+
 ### Command Line Arguments
 **Portable Mode**
 `-p, --portable`
