@@ -1,0 +1,26 @@
+os: osx
+osx_image: xcode9.4
+language: node_js
+node_js: "8"
+sudo: required
+
+env:
+  global:
+    # from https://www.electron.build/configuration/publish#githuboptions
+    # - EP_DRAFT=false
+    # - EP_PRE_RELEASE=false
+    - ELECTRON_CACHE=$HOME/.cache/electron
+    - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+
+# specifying npm version as
+# by default travis seemed to sue 4.2.0
+# https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#using-a-specific-npm-version
+
+install:
+  - node --version
+  - npm i -g npm@5
+  - npm --version
+  - npm install
+
+script:
+  - npm run package
