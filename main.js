@@ -140,7 +140,7 @@ app.on('ready', () => {
 		width: (windowState.bounds && windowState.bounds.width) || 550,
 		height: (windowState.bounds && windowState.bounds.height) || 450,
 		darkTheme: true,
-		backgroundColor: '#002b36',
+		backgroundColor: '#222222',
 		titleBarStyle: 'hidden',
 		autoHideMenuBar: true
 	};

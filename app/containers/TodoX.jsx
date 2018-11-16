@@ -521,7 +521,7 @@ export default class TodoX extends React.Component {
 			fontSize: `${this.state.fontSize}rem`,
 			lineHeight: `${this.state.fontSize * 1.5}rem`,
 			...(this.state.lightTheme ?
-				{ filter: 'invert(100%) hue-rotate(10deg) brightness(1.1) grayscale(40%)' }
+				{ filter: 'invert(100%) brightness(1.2)' }
 				:
 				{}
 			)
