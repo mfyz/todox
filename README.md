@@ -15,6 +15,8 @@ TodoX is a little app that you can use as a quick note taking or todo app.</p>
 * Replaces common syntax with symbols, such as arrows
 * Free
 
+![Screenshot](https://raw.githubusercontent.com/mfyz/todox/master/screenshot.jpg)
+
 
 ### Shortcuts
 
