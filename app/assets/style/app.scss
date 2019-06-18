@@ -168,6 +168,11 @@ $toolbarHeight: 3.5rem;
 $toolbarBgColor: lighten($bgColor, 2%);
 $scrollGradientHeaderHeight: 3rem;
 
+.applicationWrapper {
+	width: 100%;
+	height: 100%;
+}
+
 .applicationWrapper .toolbar {
 	position: fixed;
 	top: 0;

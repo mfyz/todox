@@ -1,35 +1,20 @@
-/* eslint strict: 0 */
-'use strict';
+const webpack = require('webpack')
+const baseConfig = require('./webpack.config.base')
 
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var webpackTargetElectronRenderer = require('webpack-target-electron-renderer');
-var baseConfig = require('./webpack.config.base');
+const config = Object.assign({}, baseConfig)
 
-
-var config = Object.create(baseConfig);
-
-config.devtool = false; //'source-map';
-
-config.entry = './app/mainApp';
-
-config.output.publicPath = '/dist/';
+config.mode = 'production'
+config.entry = './app/mainApp'
+config.output.publicPath = '/dist/'
 
 config.plugins.push(
-  new webpack.optimize.OccurrenceOrderPlugin(),
-  new webpack.DefinePlugin({
-    __DEV__: false,
-    'process.env': JSON.stringify('production')
-  }),
-  new webpack.optimize.UglifyJsPlugin({
-    compressor: {
-      screw_ie8: true,
-      warnings: false
-    }
-  }),
-  new ExtractTextPlugin('style.css', { allChunks: true })
-);
+	new webpack.optimize.OccurrenceOrderPlugin(),
+	new webpack.DefinePlugin({
+		__DEV__: false,
+		'process.env': JSON.stringify('production')
+	}),
+)
 
-config.target = webpackTargetElectronRenderer(config);
+config.target = 'electron-renderer'
 
-module.exports = config;
+module.exports = config

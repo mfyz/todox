@@ -1,20 +1,26 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
 	module: {
-		loaders: [{
-			test: /\.jsx?$/,
-			loaders: ['babel-loader'],
-			exclude: /node_modules/
-		},
-		{
-			test: /\.(otf)/,
-			loader: 'url-loader'
-		},
-		{
-			test: /\.scss$/,
-			loaders: ['style', 'css', 'sass']
-		}]
+		rules: [
+			{
+				test: /\.jsx?$/,
+				exclude: /node_modules/,
+				use: 'babel-loader'
+			},
+			{
+				test: /\.(otf)/,
+				loader: 'url-loader'
+			},
+			{
+				test: /\.scss$/,
+				loaders: [
+					'style-loader',
+					'css-loader',
+					'sass-loader'
+				]
+			}
+		]
 	},
 	output: {
 		path: path.join(__dirname, 'dist'),
@@ -22,13 +28,10 @@ module.exports = {
 		libraryTarget: 'commonjs2'
 	},
 	resolve: {
-		extensions: ['', '.js', '.jsx'],
-		packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
+		extensions: ['.js', '.jsx', '.css', '.scss'],
+		mainFields: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
 	},
 	plugins: [
 
-	],
-	externals: [
-		// put your node 3rd party libraries which can't be built with webpack here (mysql, mongodb, and so on..)
 	]
-};
+}

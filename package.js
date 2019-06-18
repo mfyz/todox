@@ -1,21 +1,19 @@
-/* eslint no-shadow: 0, func-names: 0, no-unused-vars: 0, no-console: 0 */
-var os = require('os');
-var webpack = require('webpack');
-var cfg = require('./webpack.config.production.js');
-var packager = require('electron-packager');
-var assign = require('object-assign');
-var del = require('del');
-var exec = require('child_process').exec;
-var argv = require('minimist')(process.argv.slice(2));
-var devDeps = Object.keys(require('./package.json').devDependencies);
+/* eslint-disable import/no-extraneous-dependencies */
+const os = require('os')
+const webpack = require('webpack')
+const packager = require('electron-packager')
+const assign = require('object-assign')
+const del = require('del')
+const argv = require('minimist')(process.argv.slice(2))
+const cfg = require('./webpack.config.production.js')
+const devDeps = Object.keys(require('./package.json').devDependencies)
+/* eslint-enable */
 
+const appName = argv.name || argv.n || 'TodoX'
+const shouldUseAsar = argv.asar || argv.a || true
+const shouldBuildAll = argv.all || false
 
-var appName = argv.name || argv.n || 'TodoX';
-var shouldUseAsar = argv.asar || argv.a || true;
-var shouldBuildAll = argv.all || false;
-
-
-var DEFAULT_OPTS = {
+const DEFAULT_OPTS = {
 	dir: './',
 	name: appName,
 	win32metadata: {
@@ -37,77 +35,79 @@ var DEFAULT_OPTS = {
 		'/test($|/)',
 		'/tools($|/)',
 		'/release($|/)'
-	].concat(devDeps.map(function(name) { return '/node_modules/' + name + '($|/)'; }))
-};
-
-var icon = argv.icon || argv.i || 'build/icon';
-
-if (icon) {
-	DEFAULT_OPTS.icon = icon;
+	].concat(devDeps.map(name => '/node_modules/' + name + '($|/)'))
 }
 
-var version = argv.version || argv.v || "1.0.0";
-DEFAULT_OPTS.version = version;
-startPack();
+const icon = argv.icon || argv.i || 'build/icon'
+
+if (icon) {
+	DEFAULT_OPTS.icon = icon
+}
+
+const version = argv.version || argv.v || '1.0.0'
+DEFAULT_OPTS.version = version
+startPack()
 
 
 function startPack() {
-	console.log('start pack...');
-	//pack(os.platform(), os.arch(), log(os.platform(), os.arch()));return;
-	webpack(cfg, function runWebpackBuild(err, stats) {
-		if (err) return console.error(err);
+	console.log('start pack...')
+	// pack(os.platform(), os.arch(), log(os.platform(), os.arch()));return
+	webpack(cfg, (err, /* stats */) => {
+		if (err) return console.error(err)
 		del('release')
-		.then(function(paths) {
-			if (shouldBuildAll) {
-				// build for all platforms
-				var archs = ['ia32', 'x64'];
-				var platforms = ['linux', 'win32', 'darwin'];
+			.then((/* paths */) => {
+				if (shouldBuildAll) {
+					// build for all platforms
+					const archs = ['ia32', 'x64']
+					const platforms = ['linux', 'win32', 'darwin']
 
-				platforms.forEach(function(plat) {
-					archs.forEach(function(arch) {
-						pack(plat, arch, log(plat, arch));
-					});
-				});
-			} else {
-				// build for current platform only
-				pack(os.platform(), os.arch(), log(os.platform(), os.arch()));
-			}
-		})
-		.catch(function(err) {
-			console.error(err);
-		});
-	});
+					platforms.forEach((plat) => {
+						archs.forEach((arch) => {
+							pack(plat, arch, log(plat, arch))
+						})
+					})
+				}
+				else {
+					// build for current platform only
+					pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+				}
+			})
+			.catch((err2) => {
+				console.error(err2)
+			})
+	})
 }
 
 function pack(plat, arch, cb) {
 	// there is no darwin ia32 electron
-	if (plat === 'darwin' && arch === 'ia32') return;
+	if (plat === 'darwin' && arch === 'ia32') return
 
-	var iconObj = {
+	const iconObj = {
 		icon: DEFAULT_OPTS.icon + (() => {
-			var extension = '.png';
+			let extension = '.png'
 			if (plat === 'darwin') {
-				extension = '.icns';
-			} else if (plat === 'win32') {
-				extension = '.ico';
+				extension = '.icns'
 			}
-			return extension;
+			else if (plat === 'win32') {
+				extension = '.ico'
+			}
+			return extension
 		})()
-	};
+	}
 
-	var opts = assign({}, DEFAULT_OPTS, iconObj, {
+	const opts = assign({}, DEFAULT_OPTS, iconObj, {
 		platform: plat,
-		arch: arch,
+		arch,
 		out: 'release/' + plat + '-' + arch
-	});
+	})
 
-	packager(opts, cb);
+	packager(opts, cb)
 }
 
 
 function log(plat, arch) {
-	return function(err, filepath) {
-		if (err) return console.error(err);
-		console.log(plat + '-' + arch + ' finished!');
-	};
+	return (err, /* filepath */) => {
+		if (err) return console.error(err)
+		console.log(plat + '-' + arch + ' finished!')
+	}
 }

@@ -10,6 +10,7 @@
 		"indent": [2, "tab"],
 		"react/jsx-indent": [2, "tab"],
 		"react/jsx-indent-props": [2, "tab"],
+		"semi": [2, "never"],
         "no-tabs": 0,
         "prefer-template": 0,
         "consistent-return": 0,
@@ -19,7 +20,8 @@
         "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
         "import/no-unresolved": [2, { "ignore": ["electron"] }],
 		"react/jsx-no-bind": 0,
-        "react/prefer-stateless-function": 0
+		"react/prefer-stateless-function": 0,
+		"jsx-a11y/href-no-hash": 0
     },
     "plugins": [
         "import",
