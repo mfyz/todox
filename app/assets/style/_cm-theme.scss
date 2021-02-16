@@ -14,7 +14,8 @@
 	}
 
 	.CodeMirror-line {
-		padding: 1rem 5vw;
+		padding-top: 1rem !important;
+		padding-bottom: 1rem !important;
 	}
 
 	.CodeMirror-cursor {
