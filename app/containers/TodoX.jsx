@@ -128,7 +128,7 @@ const changePriority = (cm, decrease) => {
 
 CodeMirror.defineSimpleMode('todotxtsyntax', {
 	start: [
-		{ regex: /^[\w\t]{0,}?(x ).*$/, token: 'task-completed', sol: true },
+		{ regex: /^[ \t]{0,}?(x ).*$/, token: 'task-completed', sol: true },
 		{ regex: /^(x )?(\(A\) ).*/, token: [null, 'task-priority1'] },
 		{ regex: /^(x )?(\(B\) ).*/, token: [null, 'task-priority2'] },
 		{ regex: /^(x )?(\(C\) ).*/, token: [null, 'task-priority3'] },
