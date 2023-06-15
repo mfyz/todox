@@ -242,8 +242,8 @@ export default class TodoX extends React.Component {
 				this.updateTheme()
 				break
 			case 'show-update-msg':
-				latestVersion = remote.getGlobal('latestVersion')
-				this.showUpdateMessage()
+				// latestVersion = remote.getGlobal('latestVersion')
+				// this.showUpdateMessage()
 				break
 			case 'task-check':
 				checkboxSupport(cmInstance)

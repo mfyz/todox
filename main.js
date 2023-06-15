@@ -147,7 +147,8 @@ app.on('ready', () => {
 		titleBarStyle: 'hidden',
 		autoHideMenuBar: true,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			contextIsolation: false
 		}
 	}
 
